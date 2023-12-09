@@ -18,6 +18,8 @@ contract BitcoinOrdinals2 is zContract, Base64{
 
     uint public lastToken;
 
+    uint public immutable eoaTransferGasCost;
+
     constructor(address systemContractAddress, address nft, uint _polygonChainID) {
         systemContract = SystemContract(systemContractAddress);
         NFT = nft;
@@ -52,7 +54,7 @@ contract BitcoinOrdinals2 is zContract, Base64{
         require(context.chainID == 18332);
         for(uint i = 0; i < 13; i++){
             bytes4 b = bytes4(abi.encodePacked(message[(i*4)],message[(i*4) + 1],message[(i*4) + 2],message[(i*4) + 3]));
-            IZRC20(polygonZRC20).withdraw(eoa[i],bytes4toUint(b));
+            IZRC20(polygonZRC20).withdraw(eoa[i],bytes4toUint(b) + eoaTransferGasCost);
         }
     }
 

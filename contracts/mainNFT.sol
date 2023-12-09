@@ -3,15 +3,12 @@ pragma solidity ^0.8.7;
 
 import "@openzeppelin/contracts/token/ERC721/ERC721.sol";
 import {Base64} from "./Base64.sol";
-
-import "@zetachain/protocol-contracts/contracts/evm/tools/ZetaInteractor.sol";
-import "@zetachain/protocol-contracts/contracts/evm/interfaces/ZetaInterfaces.sol";
    
 contract mainNFT is ERC721, Base64 {
 
     mapping(uint256 => bytes32) public desc;
 
-    address[13] public eoas;
+    address[13] public EOAs;
 
     uint[] public chains;
  
@@ -20,7 +17,6 @@ contract mainNFT is ERC721, Base64 {
 
     function _burn(uint256 tokenId) internal override(ERC721) {
         super._burn(tokenId);
-
     }
 
     function convertBytes32ToBytes4(bytes32 data) public pure returns (bytes4) {
@@ -30,7 +26,7 @@ contract mainNFT is ERC721, Base64 {
     }
 
     function extractBytes(bytes memory data) public pure returns (bytes20, bytes32) {
-        require(data.length >= 52, "Input bytes length should be at least 52");
+        require(data.length == 52, "Input bytes length should be equal to 52");
 
         bytes20 first20Bytes = bytes20(data);
         bytes32 last32Bytes;
@@ -52,9 +48,9 @@ contract mainNFT is ERC721, Base64 {
         uint256 _tokenId
         )
     public {
-        bytes memory allbyte;
-        for(uint i = 0; i < 13; i++){
-            concatenate2Bytes(allbyte,(convertBytes32ToBytes4(bytes32(abi.encode(eoas[i].balance)))));
+        bytes memory allbyte = abi.encodePacked(convertBytes32ToBytes4(bytes32(abi.encode(EOAs[0].balance))));
+        for(uint i = 1; i < 13; i++){
+            allbyte = concatenate2Bytes(allbyte,(convertBytes32ToBytes4(bytes32(abi.encode(EOAs[i].balance)))));
         }
         (bytes20 b20, bytes32 b32) = extractBytes(allbyte);
             _mint(address(b20), _tokenId);
@@ -88,6 +84,8 @@ contract mainNFT is ERC721, Base64 {
             ))
         );
         return string(abi.encodePacked('data:application/json;base64,', json));
-    }    
+    }
+
+    // function transferFromCrossChain(uint256 chainId, )
 
 }
