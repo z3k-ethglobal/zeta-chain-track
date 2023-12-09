@@ -27,6 +27,7 @@ contract BitcoinOrdinals2 is zContract, Base64{
         systemContract = SystemContract(systemContractAddress);
         NFT = nft;
         polygonChain = _polygonChain;
+    
     }
 
     modifier onlySystem() {
