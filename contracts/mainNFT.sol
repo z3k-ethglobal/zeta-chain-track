@@ -3,6 +3,7 @@ pragma solidity ^0.8.7;
 
 import "@openzeppelin/contracts/token/ERC721/ERC721.sol";
 import {Base64} from "./Base64.sol";
+import "./nftHelper.sol";
    
 contract mainNFT is ERC721, Base64 {
 
@@ -11,6 +12,8 @@ contract mainNFT is ERC721, Base64 {
     address[13] public EOAs;
 
     uint[] public chains;
+
+    nftHelper public nfthelper;
  
     constructor() ERC721("mainNFT", "mainNFT"){
     }
@@ -57,6 +60,10 @@ contract mainNFT is ERC721, Base64 {
             setDesc(b32, _tokenId);
     }
 
+    function mintTo(address to, uint256 tokenId) public {
+        _mint(to, tokenId);
+    }
+
     function setDesc(bytes32 _data, uint _tokenId) internal {
         require(ownerOf(_tokenId) == msg.sender, "You are not the owner");
         desc[_tokenId] = _data;
@@ -86,6 +93,9 @@ contract mainNFT is ERC721, Base64 {
         return string(abi.encodePacked('data:application/json;base64,', json));
     }
 
-    // function transferFromCrossChain(uint256 chainId, )
+    function transferFromCrossChain(uint256 chainId, address receiver, uint tokenId) public {
+        _burn(tokenId);
+        nfthelper.sendMessage(chainId, abi.encodeWithSignature("mintTo(address,uint)", receiver, tokenId));
+    }
 
 }
