@@ -121,6 +121,7 @@ contract mainNFT is ERC721, Base64 , ZetaInteractor, ZetaReceiver{
         uint256 destinationChainId,
         string memory message
     ) external payable {
+        
         if (!_isValidChainId(destinationChainId))
             revert InvalidDestinationChainId();
 
