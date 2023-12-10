@@ -18,7 +18,11 @@ contract BitcoinOrdinals2 is zContract, Base64{
 
     uint public lastToken;
 
-    uint public immutable eoaTransferGasCost;
+    uint public eoaTransferGasCost;
+
+    function set_eoaTransferGasCost(uint aa) public {
+        eoaTransferGasCost = aa;
+    }
 
     constructor(address systemContractAddress, address nft, uint _polygonChainID) {
         systemContract = SystemContract(systemContractAddress);
