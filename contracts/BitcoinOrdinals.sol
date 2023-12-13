@@ -14,8 +14,9 @@ contract BitcoinOrdinals is zContract, Base64{
     address mainNFT;
     bytes[13] public eoa;
     IZRC20 public constant polygonZRC20 = IZRC20(0x48f80608B672DC30DC7e3dbBd0343c5F02C738Eb);
+    IZRC20 public constant btcZRC20 = IZRC20(0x65a45c57636f9BcCeD4fe193A602008578BcA90b);
 
-    mapping(address => uint) public balanceOf;
+    mapping(bytes => uint) public balanceOf;
 
     SystemContract public immutable systemContract;
 
@@ -68,8 +69,9 @@ contract BitcoinOrdinals is zContract, Base64{
         }
     }
 
-    function withdrawMyBTC(bytes memory receiver, uint amount) public{
-        
+    function withdrawMyBTC(bytes memory receiver, uint amount) public {
+        require(balanceOf[receiver] >= amount);
+        IZRC20(btcZRC20).withdraw(receiver, amount);
     }
 
 
